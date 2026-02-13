@@ -21,6 +21,9 @@ namespace Infrastructure.Data.Configurations
 
             // Index for fetching comments by feed
             builder.HasIndex(c => c.FeedId);
+
+            // Match the Feed soft-delete filter — exclude comments on deleted feeds
+            builder.HasQueryFilter(c => !c.Feed.IsDeleted);
         }
     }
 }

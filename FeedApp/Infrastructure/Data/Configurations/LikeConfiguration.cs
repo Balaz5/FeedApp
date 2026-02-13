@@ -18,6 +18,9 @@ namespace Infrastructure.Data.Configurations
             // One like per user per feed
             builder.HasIndex(l => new { l.UserId, l.FeedId })
                 .IsUnique();
+
+            // Match the Feed soft-delete filter — exclude likes on deleted feeds
+            builder.HasQueryFilter(l => !l.Feed.IsDeleted);
         }
     }
 }

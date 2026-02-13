@@ -1,12 +1,13 @@
 using Application.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.Seed;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ namespace Api
             builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
             var app = builder.Build();
+
+            await DataSeeder.SeedAsync(app.Services);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
