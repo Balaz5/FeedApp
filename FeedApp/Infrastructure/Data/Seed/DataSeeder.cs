@@ -1,10 +1,10 @@
-﻿using Domain.Entities;
-using Domain.Enums;
+﻿using FeedApp.Domain.Entities;
+using FeedApp.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.Data.Seed
+namespace FeedApp.Infrastructure.Data.Seed
 {
     public static class DataSeeder
     {
@@ -51,8 +51,8 @@ namespace Infrastructure.Data.Seed
 
         private static async Task SeedUsersAsync(AppDbContext context)
         {
-            // Password for all seed users: "Password123!"
-            const string passwordHash = "$2a$11$K3xGBP1GcXEEP1TP5JHxoOXVbVg6PCfSGNfUNWz5bG8JOYmPqsmyG";
+            // Password for all seed users: "123456"
+            const string passwordHash = "$2a$11$oMfIjuSrA3FuxOtN7.46b.E7AGhwbYlqGoDfHL6sIGR.zVMDJPqou";
 
             var users = new[]
             {

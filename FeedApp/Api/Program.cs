@@ -1,24 +1,23 @@
-using Api.Endpoints;
-using Api.Middleware;
-using Application.Interfaces;
-using Application.Services;
-using Infrastructure.Data;
-using Infrastructure.Data.Seed;
+using FeedApp.Api.Endpoints;
+using FeedApp.Api.Middleware;
+using FeedApp.Application.DTOs.Auth;
+using FeedApp.Application.Interfaces;
+using FeedApp.Application.Services;
+using FeedApp.Infrastructure.Data;
+using FeedApp.Infrastructure.Data.Seed;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Text;
 
-namespace Api
+namespace FeedApp.Api
 {
     public class Program
     {
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddAuthorization();
-
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
 
             // Database
             builder.Services.AddDbContext<AppDbContext>(options =>
@@ -28,9 +27,66 @@ namespace Api
 
             // Application Services
             builder.Services.AddScoped<IFeedService, FeedService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             // Built-in validation support for Minimal APIs
             builder.Services.AddValidation();
+
+            // JWT Authentication
+            var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName);
+            builder.Services.Configure<JwtSettings>(jwtSettings);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.UseSecurityTokenValidators = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtSettings["Key"]!)),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
+            // Swagger
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "FeedApp API",
+                    Version = "v1",
+                    Description = "REST API for managing users, feeds, likes, and comments"
+                });
+
+                // Add JWT auth support in Swagger UI
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token"
+                });
+
+                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                });
+            });
 
             var app = builder.Build();
 
@@ -43,16 +99,17 @@ namespace Api
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
-                app.UseSwaggerUI(options =>
-                    options.SwaggerEndpoint("/openapi/v1.json", "v1"));
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             // Endpoints
+            app.MapAuthEndpoints();
             app.MapFeedEndpoints();
 
             // Minimal health check endpoint

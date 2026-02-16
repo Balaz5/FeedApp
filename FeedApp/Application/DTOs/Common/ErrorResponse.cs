@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Application.DTOs.Common
+namespace FeedApp.Application.DTOs.Common
 {
     public record ErrorResponse
     {

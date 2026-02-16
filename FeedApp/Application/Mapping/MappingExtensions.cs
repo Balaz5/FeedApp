@@ -1,7 +1,7 @@
-﻿using Application.DTOs.Feeds;
-using Domain.Entities;
+﻿using FeedApp.Application.DTOs.Feeds;
+using FeedApp.Domain.Entities;
 
-namespace Application.Mapping
+namespace FeedApp.Application.Mapping
 {
     public static class MappingExtensions
     {

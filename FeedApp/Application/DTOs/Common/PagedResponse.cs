@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Common
+﻿namespace FeedApp.Application.DTOs.Common
 {
     public record PagedResponse<T>
     {

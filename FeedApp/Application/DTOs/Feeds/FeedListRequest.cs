@@ -1,7 +1,7 @@
-﻿using Application.DTOs.Common;
-using Domain.Enums;
+﻿using FeedApp.Application.DTOs.Common;
+using FeedApp.Domain.Enums;
 
-namespace Application.DTOs.Feeds
+namespace FeedApp.Application.DTOs.Feeds
 {
     public record FeedListRequest : PagedRequest
     {

@@ -1,7 +1,7 @@
-﻿using Domain.Enums;
+﻿using FeedApp.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTOs.Feeds
+namespace FeedApp.Application.DTOs.Feeds
 {
     public record CreateFeedRequest
     {

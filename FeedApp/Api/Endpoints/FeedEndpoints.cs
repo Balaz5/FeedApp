@@ -1,15 +1,18 @@
-﻿using Application.DTOs.Feeds;
-using Application.Interfaces;
-using Domain.Enums;
+﻿using FeedApp.Api.Extensions;
+using FeedApp.Application.DTOs.Feeds;
+using FeedApp.Application.Interfaces;
+using FeedApp.Domain.Enums;
+using System.Security.Claims;
 
-namespace Api.Endpoints
+namespace FeedApp.Api.Endpoints
 {
     public static class FeedEndpoints
     {
         public static RouteGroupBuilder MapFeedEndpoints(this IEndpointRouteBuilder routes)
         {
             var group = routes.MapGroup("/api/feeds")
-                .WithTags("Feeds");
+                .WithTags("Feeds")
+                .RequireAuthorization();
 
             group.MapGet("/", GetFeeds)
                 .WithName("GetFeeds")
@@ -91,12 +94,11 @@ namespace Api.Endpoints
 
         private static async Task<IResult> CreateFeed(
             CreateFeedRequest request,
+            ClaimsPrincipal user,
             IFeedService feedService,
             CancellationToken ct = default)
         {
-            // TODO: Replace hardcoded userId with authenticated user
-            var userId = Guid.Parse("a1b2c3d4-0001-0001-0001-000000000001"); // Seed user "johndoe"
-
+            var userId = user.GetUserId();
             var result = await feedService.CreateFeedAsync(request, userId, ct);
             return Results.Created($"/api/feeds/{result.Id}", result);
         }
@@ -104,24 +106,22 @@ namespace Api.Endpoints
         private static async Task<IResult> UpdateFeed(
             Guid id,
             UpdateFeedRequest request,
+            ClaimsPrincipal user,
             IFeedService feedService,
             CancellationToken ct = default)
         {
-            // TODO: Replace hardcoded userId with authenticated user
-            var userId = Guid.Parse("a1b2c3d4-0001-0001-0001-000000000001");
-
+            var userId = user.GetUserId();
             var result = await feedService.UpdateFeedAsync(id, request, userId, ct);
             return Results.Ok(result);
         }
 
         private static async Task<IResult> DeleteFeed(
             Guid id,
+            ClaimsPrincipal user,
             IFeedService feedService,
             CancellationToken ct = default)
         {
-            // TODO: Replace hardcoded userId with authenticated user
-            var userId = Guid.Parse("a1b2c3d4-0001-0001-0001-000000000001");
-
+            var userId = user.GetUserId();
             await feedService.DeleteFeedAsync(id, userId, ct);
             return Results.NoContent();
         }
@@ -129,11 +129,11 @@ namespace Api.Endpoints
         private static async Task<IResult> UploadImage(
             Guid id,
             IFormFile file,
+            ClaimsPrincipal user,
             IFeedService feedService,
             CancellationToken ct = default)
         {
-            // TODO: Replace hardcoded userId with authenticated user
-            var userId = Guid.Parse("a1b2c3d4-0001-0001-0001-000000000001");
+            var userId = user.GetUserId();
 
             if (file.Length == 0)
                 return Results.BadRequest(new { ErrorCode = "VALIDATION_ERROR", Message = "File is empty." });

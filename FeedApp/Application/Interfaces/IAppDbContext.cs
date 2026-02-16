@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using FeedApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Interfaces
+namespace FeedApp.Application.Interfaces
 {
     public interface IAppDbContext
     {

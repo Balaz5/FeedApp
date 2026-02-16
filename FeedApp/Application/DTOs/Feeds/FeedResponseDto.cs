@@ -1,6 +1,6 @@
-﻿using Domain.Enums;
+﻿using FeedApp.Domain.Enums;
 
-namespace Application.DTOs.Feeds
+namespace FeedApp.Application.DTOs.Feeds
 {
     public record FeedResponseDto
     {

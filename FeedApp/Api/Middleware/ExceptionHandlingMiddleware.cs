@@ -1,8 +1,8 @@
-﻿using Application.DTOs.Common;
-using Domain.Exceptions;
+﻿using FeedApp.Application.DTOs.Common;
 using System.Diagnostics;
+using FeedApp.Domain.Exceptions;
 
-namespace Api.Middleware
+namespace FeedApp.Api.Middleware
 {
     public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {

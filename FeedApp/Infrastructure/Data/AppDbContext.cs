@@ -1,9 +1,9 @@
-﻿using Application.Interfaces;
-using Domain.Entities;
-using Infrastructure.Data.Configurations;
+﻿using FeedApp.Application.Interfaces;
+using FeedApp.Domain.Entities;
+using FeedApp.Infrastructure.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data
+namespace FeedApp.Infrastructure.Data
 {
     public class AppDbContext :DbContext, IAppDbContext
     {

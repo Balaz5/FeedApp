@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="Api/Api.csproj" />
-  <Project Path="Application/Application.csproj" />
-  <Project Path="Domain/Domain.csproj" />
-  <Project Path="Infrastructure/Infrastructure.csproj" />
+  <Project Path="Api/FeedApp.Api.csproj" />
+  <Project Path="Application/FeedApp.Application.csproj" />
+  <Project Path="Domain/FeedApp.Domain.csproj" />
+  <Project Path="Infrastructure/FeedApp.Infrastructure.csproj" />
 </Solution>

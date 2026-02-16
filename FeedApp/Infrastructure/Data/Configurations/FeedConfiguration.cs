@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Domain.Enums;
+﻿using FeedApp.Domain.Entities;
+using FeedApp.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.Configurations
+namespace FeedApp.Infrastructure.Data.Configurations
 {
     public class FeedConfiguration : IEntityTypeConfiguration<Feed>
     {

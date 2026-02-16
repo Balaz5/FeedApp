@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿namespace FeedApp.Domain.Entities
 {
     public class ImageFeed : Feed
     {

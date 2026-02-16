@@ -1,6 +1,6 @@
-﻿using Domain.Enums;
+﻿using FeedApp.Domain.Enums;
 
-namespace Domain.Entities
+namespace FeedApp.Domain.Entities
 {
     public abstract class Feed
     {

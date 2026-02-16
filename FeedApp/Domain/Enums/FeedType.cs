@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+﻿namespace FeedApp.Domain.Enums
 {
     public enum FeedType
     {

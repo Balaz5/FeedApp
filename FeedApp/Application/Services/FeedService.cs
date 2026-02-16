@@ -1,14 +1,14 @@
-﻿using Application.DTOs.Common;
-using Application.DTOs.Feeds;
-using Application.Interfaces;
-using Application.Mapping;
-using Domain.Entities;
-using Domain.Enums;
-using Domain.Exceptions;
+﻿using FeedApp.Domain.Entities;
+using FeedApp.Domain.Exceptions;
+using FeedApp.Application.DTOs.Common;
+using FeedApp.Application.DTOs.Feeds;
+using FeedApp.Application.Interfaces;
+using FeedApp.Application.Mapping;
+using FeedApp.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services
+namespace FeedApp.Application.Services
 {
     public class FeedService(IAppDbContext context, ILogger<FeedService> logger) : IFeedService
     {

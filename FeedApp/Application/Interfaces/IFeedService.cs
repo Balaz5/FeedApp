@@ -1,7 +1,7 @@
-﻿using Application.DTOs.Common;
-using Application.DTOs.Feeds;
+﻿using FeedApp.Application.DTOs.Common;
+using FeedApp.Application.DTOs.Feeds;
 
-namespace Application.Interfaces
+namespace FeedApp.Application.Interfaces
 {
     public interface IFeedService
     {

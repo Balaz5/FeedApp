@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTOs.Common
+namespace FeedApp.Application.DTOs.Common
 {
     public record PagedRequest
     {

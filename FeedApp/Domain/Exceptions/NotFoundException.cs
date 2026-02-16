@@ -1,4 +1,4 @@
-﻿namespace Domain.Exceptions
+﻿namespace FeedApp.Domain.Exceptions
 {
     public class NotFoundException : AppException
     {
