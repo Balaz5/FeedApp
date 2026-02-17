@@ -28,6 +28,9 @@ namespace FeedApp.Api
             // Application Services
             builder.Services.AddScoped<IFeedService, FeedService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ILikeService, LikeService>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             // Built-in validation support for Minimal APIs
             builder.Services.AddValidation();
@@ -110,7 +113,10 @@ namespace FeedApp.Api
 
             // Endpoints
             app.MapAuthEndpoints();
+            app.MapUserEndpoints();
             app.MapFeedEndpoints();
+            app.MapLikeEndpoints();
+            app.MapCommentEndpoints();
 
             // Minimal health check endpoint
             app.MapGet("/", () => Results.Ok(new { Status = "Running", Timestamp = DateTime.UtcNow }))

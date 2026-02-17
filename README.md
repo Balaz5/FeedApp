@@ -1,6 +1,16 @@
 # FeedApp
 This application is intended to handle user feeds in text, image and video url format.
 
+# Tech Stack
+Framework: ASP.NET Core 10.0
+Language: C#
+Database: SQL Server with Entity Framework Core 10
+API Docs: Swagger UI (Swashbuckle)
+
+# Software needs to be installed
+Visual Studio 2026 (Used free community version)
+Microsoft SQL Server 2025 (Used free developer version)
+
 # Application User
 A login needs to be created in Microsoft SQL Server.
 Login to the server with windows authentication or sa user.

@@ -1,4 +1,5 @@
 ﻿using FeedApp.Api.Extensions;
+using FeedApp.Application.DTOs.Common;
 using FeedApp.Application.DTOs.Feeds;
 using FeedApp.Application.Interfaces;
 using FeedApp.Domain.Enums;
@@ -17,7 +18,7 @@ namespace FeedApp.Api.Endpoints
             group.MapGet("/", GetFeeds)
                 .WithName("GetFeeds")
                 .WithSummary("List feeds with pagination and optional filters")
-                .Produces<object>(StatusCodes.Status200OK);
+                .Produces<PagedResponse<FeedResponseDto>>(StatusCodes.Status200OK);
 
             group.MapGet("/{id:guid}", GetFeedById)
                 .WithName("GetFeedById")
