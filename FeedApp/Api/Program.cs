@@ -5,6 +5,7 @@ using FeedApp.Application.Interfaces;
 using FeedApp.Application.Services;
 using FeedApp.Infrastructure.Data;
 using FeedApp.Infrastructure.Data.Seed;
+using FeedApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +56,7 @@ namespace FeedApp.Api
                 builder.Services.AddScoped<IUserService, UserService>();
                 builder.Services.AddScoped<ILikeService, LikeService>();
                 builder.Services.AddScoped<ICommentService, CommentService>();
+                builder.Services.AddHttpClient<IRssFeedClient, RssFeedClient>();
 
                 // Built-in validation support for Minimal APIs
                 builder.Services.AddValidation();
@@ -142,6 +144,7 @@ namespace FeedApp.Api
                 app.MapFeedEndpoints();
                 app.MapLikeEndpoints();
                 app.MapCommentEndpoints();
+                app.MapRssEndpoints();
 
                 // Minimal health check endpoint
                 app.MapGet("/", () => Results.Ok(new { Status = "Running", Timestamp = DateTime.UtcNow }))
