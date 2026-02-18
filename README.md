@@ -8,35 +8,35 @@ This application is intended to handle user feeds in text, image and video url f
 - API Docs: Swagger UI (Swashbuckle)
 
 # Software needs to be installed
-Visual Studio 2026 (Used free community version)
-Microsoft SQL Server 2025 (Used free developer version)
+- Visual Studio 2026 (Used free community version)
+- Microsoft SQL Server 2025 (Used free developer version)
 
 # Application User
-A login needs to be created in Microsoft SQL Server.
-Login to the server with windows authentication or sa user.
-Go to Security -> Logins
-Right on Logins -> New Login
-On General page , select SQL authentication
-Enter Login name and password
-Uncheck Enforce password policy
-On Server Roles page, select dbcreator role
-Click OK (User is created)
-Enter the User Id and Password in the DefaultConnection of appsettings.json
+1. A login needs to be created in Microsoft SQL Server.
+2. Login to the server with windows authentication or sa user.
+3. Go to Security -> Logins
+4. Right on Logins -> New Login
+5. On General page , select SQL authentication
+6. Enter Login name and password
+7. Uncheck Enforce password policy
+8. On Server Roles page, select dbcreator role
+9. Click OK (User is created)
+10. Enter the User Id and Password in the DefaultConnection of appsettings.json
 
 # Build
-Open the solution in Visual Studio 2026
-Build Solution
+1. Open the solution in Visual Studio 2026
+2. Build Solution
 
 # Run
 In Visual Studio start the IIS Express launch profile
 
 # The full auth flow to test in Swagger:
-POST /api/auth/register or POST /api/auth/login → get a JWT token
-Click "Authorize" in Swagger UI → paste the token
-All /api/feeds endpoints work with your authenticated identity
-Trying to update/delete another user's feed → 403 Forbidden
+1. POST /api/auth/register or POST /api/auth/login → get a JWT token
+2. Click "Authorize" in Swagger UI → paste the token
+3. All /api/feeds endpoints work with your authenticated identity
+4. Trying to update/delete another user's feed → 403 Forbidden
 
-The seed users all have password 123456 so you can login as johndoe, janedoe, or bobsmith to test owner authorization.
+- The seed users all have password 123456 so you can login as johndoe, janedoe, or bobsmith to test owner authorization.
 
 # Migrations
 The initial migration script is in the repo. 
