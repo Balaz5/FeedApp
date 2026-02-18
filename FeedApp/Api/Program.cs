@@ -58,6 +58,9 @@ namespace FeedApp.Api
                 builder.Services.AddScoped<ICommentService, CommentService>();
                 builder.Services.AddHttpClient<IRssFeedClient, RssFeedClient>();
 
+                // Background Services
+                builder.Services.AddHostedService<SoftDeleteCleanupJob>();
+
                 // Built-in validation support for Minimal APIs
                 builder.Services.AddValidation();
 
