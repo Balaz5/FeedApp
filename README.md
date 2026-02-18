@@ -11,7 +11,7 @@ This application is intended to handle user feeds in text, image and video url f
 
 # Software needs to be installed
 - Visual Studio 2026 (Used free community version)
-- Microsoft SQL Server 2025 (Used free developer version)
+- Microsoft SQL Server 2025 - Not needed when 'Debug in Docker' instructions are followed below (Used free developer version)
 - Docker Desktop
 
 # Application User
