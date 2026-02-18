@@ -2,10 +2,12 @@
 This application is intended to handle user feeds in text, image and video url format.
 
 # Tech Stack
-- Framework: ASP.NET Core 10.0
-- Language: C#
-- Database: SQL Server with Entity Framework Core 10
-- API Docs: Swagger UI (Swashbuckle)
+- ASP.NET Core 10.0 - Minimal API
+- Entity Framework Core 10 - Code First with SQL Server
+- JWT Bearer - authentication & authorization
+- Serilog - structured logging (console + rolling file)
+- Swagger / Swashbuckle - API documentation
+- BCrypt — password hashing
 
 # Software needs to be installed
 - Visual Studio 2026 (Used free community version)
@@ -33,7 +35,7 @@ In Visual Studio start the IIS Express launch profile
 # The full auth flow to test in Swagger:
 1. POST /api/auth/register or POST /api/auth/login → get a JWT token
 2. Click "Authorize" in Swagger UI → paste the token
-3. All /api/feeds endpoints work with your authenticated identity
+3. All endpoints except auth and health check require authentication
 4. Trying to update/delete another user's feed → 403 Forbidden
 
 - The seed users all have password 123456 so you can login as johndoe, janedoe, or bobsmith to test owner authorization.
