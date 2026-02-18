@@ -32,6 +32,11 @@ This application is intended to handle user feeds in text, image and video url f
 # Run
 In Visual Studio start the IIS Express launch profile
 
+# How to run the app in Docker
+1. Open an admin powershell and navigate to the directory where docker-compose.yml file is
+2. Run the following command: 'docker-compose up --build'
+3. Open Swagger at http://localhost:5000/swagger
+
 # The full auth flow to test in Swagger:
 1. POST /api/auth/register or POST /api/auth/login → get a JWT token
 2. Click "Authorize" in Swagger UI → paste the token
