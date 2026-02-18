@@ -12,6 +12,7 @@ This application is intended to handle user feeds in text, image and video url f
 # Software needs to be installed
 - Visual Studio 2026 (Used free community version)
 - Microsoft SQL Server 2025 (Used free developer version)
+- Docker Desktop
 
 # Application User
 1. A login needs to be created in Microsoft SQL Server.
@@ -29,13 +30,21 @@ This application is intended to handle user feeds in text, image and video url f
 1. Open the solution in Visual Studio 2026
 2. Build Solution
 
-# Run
+# Debug in IIS Express
 In Visual Studio start the IIS Express launch profile
+
+# Debug in Docker
+1. Start admin powershell
+2. docker run -d --name sqlserver2025 -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Pass1word" -e "MSSQL_PID=Developer" -p 1435:1433 -v mssql_data:/var/opt/mssql mcr.microsoft.com/mssql/server:2025-latest
+3. Open the FeedApp\FeedApp\Api\Properties\launchSettings.json
+4. Add the User Id and Password of the Application User to the "ConnectionStrings__DefaultConnection"
+- Example: "ConnectionStrings__DefaultConnection": "Server=host.docker.internal,1435;Database=AppDb;User Id=webapp;Password=webapp;MultipleActiveResultSets=true;TrustServerCertificate=True"
 
 # How to run the app in Docker
 1. Open an admin powershell and navigate to the directory where docker-compose.yml file is
 2. Run the following command: 'docker-compose up --build'
 3. Open Swagger at http://localhost:5000/swagger
+4. To exit: 'ctrl + c' in powershell
 
 # The full auth flow to test in Swagger:
 1. POST /api/auth/register or POST /api/auth/login → get a JWT token

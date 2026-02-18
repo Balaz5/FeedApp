@@ -20,7 +20,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Api/Dockerfile
     container_name: feedapp-api
     ports:
       - "5000:8080"
