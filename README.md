@@ -8,6 +8,7 @@ This application is intended to handle user feeds in text, image and video url f
 - Serilog - structured logging (console + rolling file)
 - Swagger / Swashbuckle - API documentation
 - BCrypt — password hashing
+- Docker & Docker Compose - containerization
 
 # Software needs to be installed
 - Visual Studio 2026 (Used free community version)
