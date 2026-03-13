@@ -62,10 +62,10 @@ namespace FeedApp.Application.Services
             logger.LogInformation("Login attempt for user {Username}", request.Username);
 
             var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username, ct)
-                ?? throw new NotFoundException("INVALID_CREDENTIALS", "Invalid username or password.");
+                ?? throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid username or password.");
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-                throw new NotFoundException("INVALID_CREDENTIALS", "Invalid username or password.");
+                throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid username or password.");
 
             logger.LogInformation("User {UserId} logged in successfully", user.Id);
 

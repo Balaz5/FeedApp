@@ -28,6 +28,7 @@ namespace FeedApp.Api.Middleware
         {
             context.Response.StatusCode = ex switch
             {
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
                 NotFoundException => StatusCodes.Status404NotFound,
                 ForbiddenException => StatusCodes.Status403Forbidden,
                 ConflictException => StatusCodes.Status409Conflict,
