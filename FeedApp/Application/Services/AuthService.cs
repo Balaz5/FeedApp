@@ -59,13 +59,20 @@ namespace FeedApp.Application.Services
 
         public async Task<AuthResponseDto> LoginAsync(LoginRequest request, CancellationToken ct = default)
         {
-            logger.LogInformation("Login attempt for user {Username}", request.Username);
+            logger.LogDebug("Login attempt for user {Username}", request.Username);
 
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username, ct)
-                ?? throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid username or password.");
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username, ct);
+            if (user is null)
+            {
+                logger.LogWarning("Failed login attempt for user {Username} - user not found", request.Username);
+                throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid username or password.");
+            }
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                logger.LogWarning("Failed login attempt for user {Username} - invalid password", request.Username);
                 throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid username or password.");
+            }
 
             logger.LogInformation("User {UserId} logged in successfully", user.Id);
 
