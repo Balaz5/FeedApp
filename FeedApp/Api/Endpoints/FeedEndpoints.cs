@@ -1,8 +1,10 @@
 ﻿using FeedApp.Api.Extensions;
+using FeedApp.Application.DTOs;
 using FeedApp.Application.DTOs.Common;
 using FeedApp.Application.DTOs.Feeds;
 using FeedApp.Application.Interfaces;
 using FeedApp.Domain.Enums;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 namespace FeedApp.Api.Endpoints
@@ -134,12 +136,17 @@ namespace FeedApp.Api.Endpoints
             IFormFile file,
             ClaimsPrincipal user,
             IFeedService feedService,
+            IOptions<FileUploadSettings> uploadSettings,
             CancellationToken ct = default)
         {
             var userId = user.GetUserId();
+            var maxFileSize = uploadSettings.Value.MaxFileSizeBytes;
 
             if (file.Length == 0)
                 return Results.BadRequest(new { ErrorCode = "VALIDATION_ERROR", Message = "File is empty." });
+
+            if (file.Length > maxFileSize)
+                return Results.BadRequest(new { ErrorCode = "VALIDATION_ERROR", Message = $"File size exceeds the {maxFileSize / (1024 * 1024)} MB limit." });
 
             if (!file.ContentType.StartsWith("image/"))
                 return Results.BadRequest(new { ErrorCode = "VALIDATION_ERROR", Message = "File must be an image." });

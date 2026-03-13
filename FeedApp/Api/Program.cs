@@ -1,5 +1,6 @@
 using FeedApp.Api.Endpoints;
 using FeedApp.Api.Middleware;
+using FeedApp.Application.DTOs;
 using FeedApp.Application.DTOs.Auth;
 using FeedApp.Application.Interfaces;
 using FeedApp.Application.Services;
@@ -63,6 +64,10 @@ namespace FeedApp.Api
 
                 // Built-in validation support for Minimal APIs
                 builder.Services.AddValidation();
+
+                // File Upload Settings
+                builder.Services.Configure<FileUploadSettings>(
+                    builder.Configuration.GetSection(FileUploadSettings.SectionName));
 
                 // JWT Authentication
                 var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName);
