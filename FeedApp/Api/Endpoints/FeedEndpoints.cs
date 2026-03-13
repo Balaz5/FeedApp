@@ -70,6 +70,7 @@ namespace FeedApp.Api.Endpoints
             int pageSize = 20,
             Guid? userId = null,
             FeedType? feedType = null,
+            string? searchTerm = null,
             CancellationToken ct = default)
         {
             var request = new FeedListRequest
@@ -77,7 +78,8 @@ namespace FeedApp.Api.Endpoints
                 Page = page,
                 PageSize = pageSize,
                 UserId = userId,
-                FeedType = feedType
+                FeedType = feedType,
+                SearchTerm = searchTerm
             };
 
             var result = await feedService.GetFeedsAsync(request, ct);

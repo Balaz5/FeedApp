@@ -14,5 +14,10 @@ namespace FeedApp.Application.DTOs.Feeds
         /// Filter feeds by type.
         /// </summary>
         public FeedType? FeedType { get; init; }
+
+        /// <summary>
+        /// Search in the title and the description.
+        /// </summary>
+        public string? SearchTerm { get; init; }
     }
 }

@@ -29,6 +29,10 @@ namespace FeedApp.Application.Services
             if (request.FeedType.HasValue)
                 query = query.Where(f => f.FeedType == request.FeedType.Value);
 
+            if (!string.IsNullOrEmpty(request.SearchTerm))
+                query = query.Where(f => f.Title.ToLower().Contains(request.SearchTerm.ToLower()) ||
+                    f.Description.ToLower().Contains(request.SearchTerm.ToLower()));
+
             var totalCount = await query.CountAsync(ct);
 
             var feeds = await query
