@@ -30,8 +30,11 @@ namespace FeedApp.Application.Services
                 query = query.Where(f => f.FeedType == request.FeedType.Value);
 
             if (!string.IsNullOrEmpty(request.SearchTerm))
-                query = query.Where(f => f.Title.ToLower().Contains(request.SearchTerm.ToLower()) ||
-                    f.Description.ToLower().Contains(request.SearchTerm.ToLower()));
+            {
+                var term = request.SearchTerm;
+                query = query.Where(f => EF.Functions.Like(f.Title, $"%{term}%") ||
+                    EF.Functions.Like(f.Description, $"%{term}%"));
+            }
 
             var totalCount = await query.CountAsync(ct);
 
