@@ -3,7 +3,6 @@ using FeedApp.Domain.Exceptions;
 using FeedApp.Application.DTOs.Common;
 using FeedApp.Application.DTOs.Feeds;
 using FeedApp.Application.Interfaces;
-using FeedApp.Application.Mapping;
 using FeedApp.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,11 +16,7 @@ namespace FeedApp.Application.Services
             logger.LogInformation("Fetching feeds - Page: {Page}, PageSize: {PageSize}, UserId: {UserId}, FeedType: {FeedType}",
                 request.Page, request.PageSize, request.UserId, request.FeedType);
 
-            var query = context.Feeds
-                .Include(f => f.User)
-                .Include(f => f.Likes)
-                .Include(f => f.Comments)
-                .AsQueryable();
+            var query = context.Feeds.AsQueryable();
 
             if (request.UserId.HasValue)
                 query = query.Where(f => f.UserId == request.UserId.Value);
@@ -38,7 +33,7 @@ namespace FeedApp.Application.Services
 
             var totalCount = await query.CountAsync(ct);
 
-            var feeds = await query
+            var items = await ProjectToDto(query)
                 .OrderByDescending(f => f.CreatedAtUtc)
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
@@ -46,7 +41,7 @@ namespace FeedApp.Application.Services
 
             return new PagedResponse<FeedResponseDto>
             {
-                Items = feeds.Select(f => f.ToResponseDto()).ToList(),
+                Items = items,
                 Page = request.Page,
                 PageSize = request.PageSize,
                 TotalCount = totalCount
@@ -57,14 +52,9 @@ namespace FeedApp.Application.Services
         {
             logger.LogInformation("Fetching feed {FeedId}", id);
 
-            var feed = await context.Feeds
-                .Include(f => f.User)
-                .Include(f => f.Likes)
-                .Include(f => f.Comments)
-                .FirstOrDefaultAsync(f => f.Id == id, ct)
+            return await ProjectToDto(context.Feeds.Where(f => f.Id == id))
+                .FirstOrDefaultAsync(ct)
                 ?? throw new NotFoundException("FEED_NOT_FOUND", $"Feed with ID '{id}' was not found.");
-
-            return feed.ToResponseDto();
         }
 
         public async Task<FeedResponseDto> CreateFeedAsync(CreateFeedRequest request, Guid userId, CancellationToken ct = default)
@@ -112,9 +102,6 @@ namespace FeedApp.Application.Services
             logger.LogInformation("Updating feed {FeedId} by user {UserId}", id, userId);
 
             var feed = await context.Feeds
-                .Include(f => f.User)
-                .Include(f => f.Likes)
-                .Include(f => f.Comments)
                 .FirstOrDefaultAsync(f => f.Id == id, ct)
                 ?? throw new NotFoundException("FEED_NOT_FOUND", $"Feed with ID '{id}' was not found.");
 
@@ -139,7 +126,7 @@ namespace FeedApp.Application.Services
 
             logger.LogInformation("Feed {FeedId} updated successfully", id);
 
-            return feed.ToResponseDto();
+            return await GetFeedByIdAsync(id, ct);
         }
 
         public async Task DeleteFeedAsync(Guid id, Guid userId, CancellationToken ct = default)
@@ -164,9 +151,6 @@ namespace FeedApp.Application.Services
             logger.LogInformation("Uploading image for feed {FeedId} by user {UserId}", id, userId);
 
             var feed = await context.Feeds
-                .Include(f => f.User)
-                .Include(f => f.Likes)
-                .Include(f => f.Comments)
                 .FirstOrDefaultAsync(f => f.Id == id, ct)
                 ?? throw new NotFoundException("FEED_NOT_FOUND", $"Feed with ID '{id}' was not found.");
 
@@ -198,7 +182,7 @@ namespace FeedApp.Application.Services
 
             logger.LogInformation("Image uploaded for feed {FeedId} ({Size} bytes)", id, imageData.Length);
 
-            return feed.ToResponseDto();
+            return await GetFeedByIdAsync(id, ct);
         }
 
         public async Task<(byte[] data, string contentType)> GetFeedImageAsync(Guid id, CancellationToken ct = default)
@@ -231,6 +215,27 @@ namespace FeedApp.Application.Services
                 throw new NotFoundException("IMAGE_NOT_FOUND", $"No image found for feed with ID '{id}'.");
 
             return (imageData, mimeType);
+        }
+
+        private static IQueryable<FeedResponseDto> ProjectToDto(IQueryable<Feed> query)
+        {
+            return query.Select(f => new FeedResponseDto
+            {
+                Id = f.Id,
+                Title = f.Title,
+                Description = f.Description,
+                FeedType = f.FeedType,
+                UserId = f.UserId,
+                Username = f.User.Username,
+                CreatedAtUtc = f.CreatedAtUtc,
+                UpdatedAtUtc = f.UpdatedAtUtc,
+                LikeCount = f.Likes.Count,
+                CommentCount = f.Comments.Count,
+                HasImage = (f is ImageFeed)
+                    ? ((ImageFeed)f).ImageData != null
+                    : (f is VideoFeed) && ((VideoFeed)f).ImageData != null,
+                VideoUrl = (f is VideoFeed) ? ((VideoFeed)f).VideoUrl : null
+            });
         }
     }
 }
