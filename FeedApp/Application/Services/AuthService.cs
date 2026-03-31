@@ -1,8 +1,8 @@
-﻿using FeedApp.Application.DTOs.Auth;
+using FeedApp.Application.DTOs.Auth;
 using FeedApp.Application.Interfaces;
+using FeedApp.Application.Interfaces.Repositories;
 using FeedApp.Domain.Entities;
 using FeedApp.Domain.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +13,8 @@ using System.Text;
 namespace FeedApp.Application.Services
 {
     public class AuthService(
-        IAppDbContext context,
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
         IOptions<JwtSettings> jwtSettings,
         ILogger<AuthService> logger) : IAuthService
     {
@@ -24,11 +25,11 @@ namespace FeedApp.Application.Services
             logger.LogInformation("Registering user {Username}", request.Username);
 
             // Check for duplicate username
-            if (await context.Users.AnyAsync(u => u.Username == request.Username, ct))
+            if (await userRepository.ExistsByUsernameAsync(request.Username, ct))
                 throw new ConflictException("USERNAME_TAKEN", $"Username '{request.Username}' is already taken.");
 
             // Check for duplicate email
-            if (await context.Users.AnyAsync(u => u.Email == request.Email, ct))
+            if (await userRepository.ExistsByEmailAsync(request.Email, ct))
                 throw new ConflictException("EMAIL_TAKEN", $"Email '{request.Email}' is already registered.");
 
             var user = new User
@@ -40,8 +41,8 @@ namespace FeedApp.Application.Services
                 CreatedAtUtc = DateTime.UtcNow
             };
 
-            context.Users.Add(user);
-            await context.SaveChangesAsync(ct);
+            userRepository.Add(user);
+            await unitOfWork.SaveChangesAsync(ct);
 
             logger.LogInformation("User {UserId} registered successfully", user.Id);
 
@@ -61,7 +62,7 @@ namespace FeedApp.Application.Services
         {
             logger.LogDebug("Login attempt for user {Username}", request.Username);
 
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Username == request.Username, ct);
+            var user = await userRepository.GetByUsernameAsync(request.Username, ct);
             if (user is null)
             {
                 logger.LogWarning("Failed login attempt for user {Username} - user not found", request.Username);

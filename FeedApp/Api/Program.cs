@@ -3,9 +3,12 @@ using FeedApp.Api.Middleware;
 using FeedApp.Application.DTOs;
 using FeedApp.Application.DTOs.Auth;
 using FeedApp.Application.Interfaces;
+using FeedApp.Application.Interfaces.Repositories;
 using FeedApp.Application.Services;
+using FeedApp.Infrastructure;
 using FeedApp.Infrastructure.Data;
 using FeedApp.Infrastructure.Data.Seed;
+using FeedApp.Infrastructure.Repositories;
 using FeedApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +52,12 @@ namespace FeedApp.Api
                 builder.Services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-                builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+                // Unit of Work + Repositories
+                builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+                builder.Services.AddScoped<IFeedRepository, FeedRepository>();
+                builder.Services.AddScoped<IUserRepository, UserRepository>();
+                builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+                builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
                 // Application Services
                 builder.Services.AddScoped<IFeedService, FeedService>();

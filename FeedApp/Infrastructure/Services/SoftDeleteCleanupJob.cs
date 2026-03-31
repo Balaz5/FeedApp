@@ -1,5 +1,5 @@
-﻿using FeedApp.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using FeedApp.Application.Interfaces;
+using FeedApp.Application.Interfaces.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -42,14 +42,10 @@ namespace FeedApp.Infrastructure.Services
         private async Task CleanupAsync(CancellationToken ct)
         {
             using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var feedRepository = scope.ServiceProvider.GetRequiredService<IFeedRepository>();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-            // IgnoreQueryFilters() bypasses the global IsDeleted filter
-            // so we can find soft-deleted records
-            var deletedFeeds = await context.Feeds
-                .IgnoreQueryFilters()
-                .Where(f => f.IsDeleted)
-                .ToListAsync(ct);
+            var deletedFeeds = await feedRepository.GetSoftDeletedAsync(ct);
 
             if (deletedFeeds.Count == 0)
             {
@@ -57,8 +53,8 @@ namespace FeedApp.Infrastructure.Services
                 return;
             }
 
-            context.Feeds.RemoveRange(deletedFeeds);
-            await context.SaveChangesAsync(ct);
+            feedRepository.RemoveRange(deletedFeeds);
+            await unitOfWork.SaveChangesAsync(ct);
 
             logger.LogInformation("Permanently deleted {Count} soft-deleted feeds", deletedFeeds.Count);
         }

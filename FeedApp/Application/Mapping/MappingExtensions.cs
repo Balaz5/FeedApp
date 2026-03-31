@@ -1,34 +1,54 @@
-﻿using FeedApp.Application.DTOs.Comments;
+using FeedApp.Application.DTOs.Comments;
+using FeedApp.Application.DTOs.Feeds;
 using FeedApp.Application.DTOs.Users;
-using FeedApp.Domain.Entities;
+using FeedApp.Domain.Projections;
 
 namespace FeedApp.Application.Mapping
 {
     public static class MappingExtensions
     {
-        public static UserResponseDto ToResponseDto(this User user)
+        public static FeedResponseDto ToDto(this FeedDetails details)
         {
-            return new UserResponseDto
+            return new FeedResponseDto
             {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                CreatedAtUtc = user.CreatedAtUtc,
-                FeedCount = user.Feeds?.Count ?? 0
+                Id = details.Id,
+                Title = details.Title,
+                Description = details.Description,
+                FeedType = details.FeedType,
+                UserId = details.UserId,
+                Username = details.Username,
+                CreatedAtUtc = details.CreatedAtUtc,
+                UpdatedAtUtc = details.UpdatedAtUtc,
+                LikeCount = details.LikeCount,
+                CommentCount = details.CommentCount,
+                HasImage = details.HasImage,
+                VideoUrl = details.VideoUrl
             };
         }
 
-        public static CommentResponseDto ToResponseDto(this Comment comment)
+        public static UserResponseDto ToDto(this UserDetails details)
+        {
+            return new UserResponseDto
+            {
+                Id = details.Id,
+                Username = details.Username,
+                Email = details.Email,
+                CreatedAtUtc = details.CreatedAtUtc,
+                FeedCount = details.FeedCount
+            };
+        }
+
+        public static CommentResponseDto ToDto(this CommentDetails details)
         {
             return new CommentResponseDto
             {
-                Id = comment.Id,
-                Content = comment.Content,
-                UserId = comment.UserId,
-                Username = comment.User?.Username ?? string.Empty,
-                FeedId = comment.FeedId,
-                CreatedAtUtc = comment.CreatedAtUtc,
-                UpdatedAtUtc = comment.UpdatedAtUtc
+                Id = details.Id,
+                Content = details.Content,
+                UserId = details.UserId,
+                Username = details.Username,
+                FeedId = details.FeedId,
+                CreatedAtUtc = details.CreatedAtUtc,
+                UpdatedAtUtc = details.UpdatedAtUtc
             };
         }
     }

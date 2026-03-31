@@ -1,11 +1,10 @@
-﻿using FeedApp.Application.Interfaces;
 using FeedApp.Domain.Entities;
 using FeedApp.Infrastructure.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeedApp.Infrastructure.Data
 {
-    public class AppDbContext :DbContext, IAppDbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
