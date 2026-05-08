@@ -25,7 +25,7 @@ This application is intended to handle user feeds in text, image and video url f
 7. Uncheck Enforce password policy
 8. On Server Roles page, select dbcreator role
 9. Click OK (User is created)
-10. Enter the User Id and Password in the DefaultConnection of appsettings.json
+10. Enter the User Id and Password in the DefaultConnection of Api\appsettings.Development.json and Api\appsettings.json
 
 # Build
 1. Open the solution in Visual Studio 2026
@@ -40,6 +40,8 @@ In Visual Studio start the IIS Express launch profile
 3. Open the FeedApp\FeedApp\Api\Properties\launchSettings.json
 4. Add the User Id and Password of the Application User to the "ConnectionStrings__DefaultConnection"
 - Example: "ConnectionStrings__DefaultConnection": "Server=host.docker.internal,1435;Database=AppDb;User Id=webapp;Password=webapp;MultipleActiveResultSets=true;TrustServerCertificate=True"
+5. Add port 1435 to Api\appsettings.Development.json and Api\appsettings.json
+- Example: "DefaultConnection": "Server=localhost,1435;Database=AppDb;User Id=webapp;Password=webapp;MultipleActiveResultSets=true;TrustServerCertificate=True"
 
 # How to run the app in Docker
 1. Open an admin powershell and navigate to the directory where docker-compose.yml file is
