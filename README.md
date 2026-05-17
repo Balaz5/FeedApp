@@ -62,8 +62,10 @@ The initial migration script is in the repo.
 Running the solution will create the db and populate it with seed data.
 For reference, here are the migration commands.
 
-# Create initial migration script in Developer PowerShell
+- Create initial migration script in Developer PowerShell:
+
 dotnet ef migrations add InitialCreate --project Infrastructure --startup-project Api
 
-# Applying the script to the database:
+- Applying the script to the database:
+
 dotnet ef database update --project Api
