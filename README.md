@@ -2,13 +2,17 @@
 This application is intended to handle user feeds in text, image and video url format.
 
 # Tech Stack
-- ASP.NET Core 10.0 - Minimal API
-- Entity Framework Core 10 - Code First with SQL Server
-- JWT Bearer - authentication & authorization
-- Serilog - structured logging (console + rolling file)
-- Swagger / Swashbuckle - API documentation
-- BCrypt — password hashing
-- Docker & Docker Compose - containerization
+- .NET 10 / ASP.NET Core 10.0 — Minimal API with built-in validation (`AddValidation`)
+- Clean Architecture — Domain / Application / Infrastructure / Api layers, Repository + Unit of Work
+- Entity Framework Core 10 — Code First with SQL Server 2025
+- JWT Bearer — authentication & authorization
+- BCrypt.Net-Next — password hashing
+- Serilog — structured logging (console + rolling file, 30-day retention)
+- Swagger / Swashbuckle — API documentation (with JWT bearer support)
+- IHttpClientFactory + System.Xml.Linq — RSS feed ingestion
+- Hosted BackgroundService — daily soft-delete cleanup job
+- Custom exception-handling middleware with a typed domain-exception hierarchy
+- Docker & Docker Compose — containerization
 
 # Software needs to be installed
 - Visual Studio 2026 (Used free community version)
